@@ -40,6 +40,14 @@ jobs:
         with:
           dockerfile: Dockerfile
 
+  yamllint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run yamllint
+        uses: bewuethr/yamllint-action@v1
+
   dockerhub:
     needs: build
     if: github.repository == 'jhoblitt/rook-block-be-gone'
