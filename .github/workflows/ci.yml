@@ -1,9 +1,10 @@
+---
 # Mashup of:
 # - https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
 # - https://docs.docker.com/build/ci/github-actions/examples/#manage-tags-and-labels
 name: ci
 
-on:
+"on":
   schedule:
     - cron: "0 10 * * *"
   push:
@@ -19,18 +20,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.19
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
 
-    - name: Build
-      run: go build -v ./...
+      - name: Build
+        run: go build -v ./...
 
-    - name: Test
-      run: go test -v ./...
+      - name: Test
+        run: go test -v ./...
 
   hadolint:
     runs-on: ubuntu-latest
