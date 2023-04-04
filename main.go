@@ -45,19 +45,19 @@ func main() {
 	for _, v := range data.CephClusterSpec.Storage.Nodes {
 		host := "rke@" + v.Name
 
-		fmt.Printf("ssh %s sudo rm -rf /var/lib/rook\n", host)
-		fmt.Printf("ssh %s 'ls /dev/mapper/ceph-* | xargs -I%% -- echo /sbin/dmsetup remove %%'\n", host)
-		fmt.Printf("ssh %s sudo rm -rf /dev/ceph-*\n", host)
+		fmt.Printf("ssh %s sudo /bin/rm -rf /var/lib/rook\n", host)
+		fmt.Printf("ssh %s 'ls /dev/mapper/ceph-* | xargs -I%% -- echo sudo /sbin/dmsetup remove %% | sh'\n", host)
+		fmt.Printf("ssh %s sudo /bin/rm -rf /dev/ceph-*\n", host)
 
 		for _, v := range v.Devices {
 			dev := v.Name
 
-			fmt.Printf("ssh %s sudo sgdisk --zap-all \"%s\"\n", host, dev)
-			fmt.Printf("ssh %s sudo dd if=\"/dev/zero\" of=\"%s\" bs=1M count=100 oflag=direct,dsync\n", host, dev)
-			fmt.Printf("ssh %s sudo blockdev --rereadpt \"%s\"\n", host, dev)
+			fmt.Printf("ssh %s sudo /sbin/sgdisk --zap-all \"/dev/%s\"\n", host, dev)
+			fmt.Printf("ssh %s sudo /bin/dd if=\"/dev/zero\" of=\"/dev/%s\" bs=1M count=100 oflag=direct,dsync\n", host, dev)
+			fmt.Printf("ssh %s sudo /sbin/blockdev --rereadpt \"/dev/%s\"\n", host, dev)
 		}
 
-		fmt.Printf("ssh %s lsblk\n", host)
-		fmt.Printf("ssh %s sudo reboot\n", host)
+		fmt.Printf("ssh %s /bin/lsblk\n", host)
+		fmt.Printf("ssh %s sudo /sbin/reboot\n", host)
 	}
 }
