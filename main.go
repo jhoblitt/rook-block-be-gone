@@ -129,7 +129,7 @@ func main() {
 		run_cmd(client, "sudo /bin/rm -rf /dev/ceph-*")
 
 		for _, v := range v.Devices {
-			dev := v.Name
+			dev := fmt.Sprintf("/dev/%s", v.Name)
 
 			run_cmd(client, fmt.Sprintf("sudo /sbin/sgdisk --zap-all \"%s\"", dev))
 			run_cmd(client, fmt.Sprintf("sudo /bin/dd if=\"/dev/zero\" of=\"%s\" bs=1M count=100 oflag=direct,dsync", dev))
