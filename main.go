@@ -121,7 +121,8 @@ func main() {
 	for _, v := range data.CephClusterSpec.Storage.Nodes {
 		client, err := ssh.Dial("tcp", v.Name+":22", config)
 		if err != nil {
-			log.Fatalf("unable to connect: %v", err)
+			fmt.Printf("unable to connect: %v\n", err)
+			continue
 		}
 		defer client.Close()
 
