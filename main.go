@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"regexp"
 
 	"golang.org/x/crypto/ssh"
 	"gopkg.in/yaml.v3"
@@ -128,8 +129,16 @@ func main() {
 		run_cmd(client, "ls /dev/mapper/ceph-* | xargs -I%% -- echo sudo /sbin/dmsetup remove %% | sh")
 		run_cmd(client, "sudo /bin/rm -rf /dev/ceph-*")
 
+		dev_prefix := regexp.MustCompile("^/dev/")
+
 		for _, v := range v.Devices {
-			dev := fmt.Sprintf("/dev/%s", v.Name)
+			// check if device name includes a /dev/ prefix
+			var dev string
+			if dev_prefix.MatchString(v.Name) {
+				dev = v.Name
+			} else {
+				dev = fmt.Sprintf("/dev/%s", v.Name)
+			}
 
 			run_cmd(client, fmt.Sprintf("sudo /sbin/sgdisk --zap-all \"%s\"", dev))
 			run_cmd(client, fmt.Sprintf("sudo /bin/dd if=\"/dev/zero\" of=\"%s\" bs=1M count=100 oflag=direct,dsync", dev))
