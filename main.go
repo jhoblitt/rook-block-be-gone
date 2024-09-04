@@ -126,7 +126,7 @@ func main() {
 		}
 		defer client.Close()
 
-		run_cmd(client, "sudo /bin/rm -rf /var/lib/rook")
+		run_cmd(client, "sudo /bin/rm -rf /var/lib/rook/*")
 		run_cmd(client, "ls /dev/mapper/ceph-* | xargs -I%% -- echo sudo /sbin/dmsetup remove %% | sh")
 		run_cmd(client, "sudo /bin/rm -rf /dev/ceph-*")
 
